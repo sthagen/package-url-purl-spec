@@ -37,6 +37,21 @@ bitbucket
 
       pkg:bitbucket/birkenfeld/pygments-main@244fd47e07d1014f0aed9c
 
+cocoapods
+---------
+``cocoapods`` for Cocoapods:
+
+- The default repository is ``https://cdn.cocoapods.org/``
+- The ``name`` is the pod name and is case sensitive, cannot contain whitespace, a plus (+) character, or begin with a period (.).
+- The ``version`` is the package version.
+- The purl subpath is used to represent a pods subspec (if present)
+- Examples::
+
+      pkg:cocoapods/AFNetworking@4.0.1
+      pkg:cocoapods/MapsIndoors@3.24.0
+      pkg:cocoapods/ShareKit@2.0#Twitter
+      pkg:cocoapods/GoogleUtilities@7.5.2#NSData+zlib
+
 cargo
 -----
 ``cargo`` for Rust:
@@ -62,6 +77,48 @@ composer
 
       pkg:composer/laravel/laravel@5.5.0
 
+conan
+-----
+``conan`` for Conan C/C++ packages:
+
+- The default repository is ``https://center.conan.io``
+- The ``namespace`` is the user if present
+- The ``name`` is the package name.
+- The ``version`` is the package version.
+- The qualifier ``channel`` must be not empty if namespace is present
+- Examples::
+
+      pkg:conan/cctz@2.3
+      pkg:conan/bincrafters/cctz@2.3?channel=stable
+
+conda
+-----
+``conda`` for Conda packages:
+
+- The default repository is ``https://repo.anaconda.com``
+- The ``name`` is the package name
+- The ``version`` is the package version
+- The qualifiers: ``build`` is the build string.
+  ``channel`` is the package stored location.
+  ``subdir`` is the associated platform.
+  ``type`` is the package type.
+- Examples::
+
+      pkg:conda/absl-py@0.4.1?build=py36h06a4308_0&channel=main&subdir=linux-64&type=tar.bz2
+
+cran
+-----
+``cran`` for CRAN R packages:
+
+- The default repository is ``https://cran.r-project.org``
+- The ``name`` is the package name and is case sensitive, but there cannot be two packages on CRAN with the same name ignoring case.
+- The ``version`` is the package version.
+- Examples::
+
+      pkg:cran/A3@1.0.0
+      pkg:cran/rJava@1.0-4
+      pkg:cran/caret@6.0-88
+
 deb
 ---
 ``deb`` for Debian, Debian derivatives, and Ubuntu packages:
@@ -72,13 +129,22 @@ deb
 - The ``namespace`` is the "vendor" name such as "debian" or "ubuntu".
   It is not case sensitive and must be lowercased.
 - The ``name`` is not case sensitive and must be lowercased.
-- The ``version`` is the package version.
-- ``arch`` is the qualifiers key for a package architecture
+- The ``version`` is the version of the binary (or source) package.
+- ``arch`` is the qualifiers key for a package architecture. The special value
+  ``arch=source`` identifies a Debian source package that usually consists of a
+  Debian Source control file (.dsc) and corresponding upstream and Debian
+  sources. The ``dpkg-query`` command can print the ``name`` and ``version`` of
+  the corresponding source package of a binary package::
+
+    dpkg-query -f '${source:Package} ${source:Version}' -W <binary package name>
+
 - Examples::
 
       pkg:deb/debian/curl@7.50.3-1?arch=i386&distro=jessie
       pkg:deb/debian/dpkg@1.19.0.4?arch=amd64&distro=stretch
       pkg:deb/ubuntu/dpkg@1.19.0.4?arch=amd64
+      pkg:deb/debian/attr@1:2.4.47-2?arch=source
+      pkg:deb/debian/attr@1:2.4.47-2%2Bb1?arch=amd64
 
 docker
 ------
@@ -123,7 +189,7 @@ version control repository such as a bare git repo.
 
      pkg:generic/openssl@1.1.10g
      pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz&checksum=sha256:de4d501267da
-     pkg:generic/bitwarderl?vcs_url=https://git.fsfe.org/dxtr/bitwarderl@cc55108da32
+     pkg:generic/bitwarderl?vcs_url=git%2Bhttps://git.fsfe.org/dxtr/bitwarderl%40cc55108da32
 
 
 github
@@ -157,6 +223,18 @@ golang
       pkg:golang/google.golang.org/genproto#googleapis/api/annotations
       pkg:golang/github.com/gorilla/context@234fd47e07d1004f0aed9c#api
 
+hackage
+-------
+``hackage`` for Haskell packages
+
+- The default repository is `https://hackage.haskell.org`.
+- The `version` is package version.
+- The `name` is case sensitive and use kebab-case
+- Examples::
+
+        pkg:hackage/a50@0.5
+        pkg:hackage/AC-HalfInteger@1.2.1
+        pkg:hackage/3d-graphics-examples@0.0.0.2
 
 hex
 ---
@@ -207,7 +285,7 @@ npm
 
       pkg:npm/foobar@12.3.1
       pkg:npm/%40angular/animation@12.3.1
-      pkg:npm/mypackage@12.4.5?vcs_url=git://host.com/path/to/repo.git@4345abcd34343
+      pkg:npm/mypackage@12.4.5?vcs_url=git://host.com/path/to/repo.git%404345abcd34343
 
 nuget
 -----
@@ -216,10 +294,39 @@ nuget
 - The default repository is ``https://www.nuget.org``
 - There is no ``namespace`` per se even if the common convention is to use
   dot-separated package names where the first segment is ``namespace``-like.
-  TBD: should we split the first segment as a namespace?
 - Examples::
 
       pkg:nuget/EnterpriseLibrary.Common@6.0.1304
+
+oci
+------------
+``oci`` for all artifacts stored in registries that conform to the
+`OCI Distribution Specification <https://github.com/opencontainers/distribution-spec>`_,
+including container images built by Docker and others:
+
+- There is no canonical package repository for OCI artifacts. Therefore
+  ``oci`` purls must be registry agnostic by default. To specify the repository,
+  provide a ``repository_url`` value.
+- OCI purls do not contain a ``namespace``, although, ``repository_url`` may
+  contain a namespace as part of the physical location of the package.
+- The ``name`` is not case sensitive and must be lowercased. The name is the
+  last fragment of the repository name. For example if the repository
+  name is ``library/debian`` then the ``name`` is ``debian``.
+- The ``version`` is the ``sha256:hex_encoded_lowercase_digest`` of the
+  artifact and is required to uniquely identify the artifact.
+- Optional qualifiers may include:
+
+  - ``arch``: key for a package architecture, when relevant
+  - ``repository_url``: A repository URL where the artifact may be found, but not
+    intended as the only location. This value is encouraged to identify a
+    location the content may be fetched
+  - ``tag``: artifact tag that may have been associated with the digest at the time
+- Examples::
+
+      pkg:oci/debian@sha256:<digest>?repository_url=docker.io/library/debian&arch=amd64&tag=latest
+      pkg:oci/debian@sha256:<digest>?repository_url=ghcr.io/debian&tag=bullseye
+      pkg:oci/static@sha256:<digest>?repository_url=gcr.io/distroless/static&tag=latest
+      pkg:oci/hello-wasm@sha256:<digest>?tag=v1
 
 pypi
 ----
@@ -241,7 +348,7 @@ rpm
 - There is no default package repository: this should be implied either from
   the ``distro`` qualifiers key  or using a repository base url as 
   ``repository_url`` qualifiers key
-- the ``namespace`` is the vendor such as fedora or opensus
+- the ``namespace`` is the vendor such as fedora or opensuse
   It is not case sensitive and must be lowercased.
 - the ``name`` is the RPM name and is case sensitive.
 - the ``version`` is the combined version and release of an
@@ -255,6 +362,17 @@ rpm
       pkg:rpm/fedora/curl@7.50.3-1.fc25?arch=i386&distro=fedora-25
       pkg:rpm/centerim@4.22.10-1.el6?arch=i686&epoch=1&distro=fedora-25
 
+swift
+-----
+``swift`` for Swift packages:
+
+- There is no default package repository: this should be implied from ``namespace``
+- The ``namespace`` is source host and user/organization.
+- The ``name`` is the repository name.
+- The ``version`` is the package version.
+
+      pkg:swift/github.com/Alamofire/Alamofire@5.4.3
+      pkg:swift/github.com/RxSwiftCommunity/RxFlow@2.12.4
 
 Other candidate types to define:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -272,10 +390,8 @@ Other candidate types to define:
 - ``chocolatey`` for Chocolatey packages
 - ``clojars`` for Clojure packages:
 - ``cocoapods`` for Cocoapods iOS packages:
-- ``conan`` for Conan C/C++ packages:
 - ``coreos`` for CoreOS packages:
 - ``cpan`` for CPAN Perl packages:
-- ``cran`` for CRAN R packages:
 - ``ctan`` for CTAN TeX packages:
 - ``crystal`` for Crystal Shards packages:
 - ``drupal`` for Drupal packages:
@@ -287,7 +403,6 @@ Other candidate types to define:
 - ``gitlab`` for Gitlab-based packages:
 - ``gradle`` for Gradle plugins
 - ``guix`` for Guix packages:
-- ``hackage`` for Haskell packages:
 - ``haxe`` for Haxe packages:
 - ``helm`` for Kubernetes packages
 - ``julia`` for Julia packages:
@@ -309,7 +424,6 @@ Other candidate types to define:
 - ``puppet`` for Puppet Forge packages:
 - ``sourceforge`` for Sourceforge-based packages:
 - ``sublime`` for Sublime packages:
-- ``swift`` for Swift packages:
 - ``terraform`` for Terraform modules
 - ``vagrant`` for Vagrant boxes
 - ``vim`` for Vim scripts packages:
