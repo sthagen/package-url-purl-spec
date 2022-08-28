@@ -23,6 +23,25 @@ See also https://github.com/package-url/purl-spec and
 Known ``purl`` types
 ~~~~~~~~~~~~~~~~~~~~
 
+alpm
+----
+``alpm`` for Arch Linux and other users of the libalpm/pacman package manager.
+
+- There is no default package repository: this should be implied either from
+  the ``distro`` qualifiers key  or using a repository base url as
+  ``repository_url`` qualifiers key.
+- The ``namespace`` is the vendor such as ``arch``, ``arch32``, ``archarm``,
+  ``manjaro`` or ``msys``. It is not case sensitive and must be lowercased.
+- The ``name`` is the package name. It is not case sensitive and must be lowercased.
+- The ``version`` is the version of the package as specified in [`vercmp(8)`](https://man.archlinux.org/man/vercmp.8#DESCRIPTION) as part of alpm.
+- The ``arch`` is the qualifiers key for a package architecture.
+- Examples::
+
+      pkg:alpm/arch/pacman@6.0.1-1?arch=x86_64
+      pkg:alpm/arch/python-pip@21.0-1?arch=any
+      pkg:alpm/arch/containers-common@1:0.47.4-4?arch=x86_64
+
+
 bitbucket
 ---------
 ``bitbucket`` for Bitbucket-based packages:
@@ -196,9 +215,9 @@ version control repository such as a bare git repo.
   it can be a file or directory name.
 - Examples (truncated for brevity)::
 
-     pkg:generic/openssl@1.1.10g
-     pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz&checksum=sha256:de4d501267da
-     pkg:generic/bitwarderl?vcs_url=git%2Bhttps://git.fsfe.org/dxtr/bitwarderl%40cc55108da32
+      pkg:generic/openssl@1.1.10g
+      pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz&checksum=sha256:de4d501267da
+      pkg:generic/bitwarderl?vcs_url=git%2Bhttps://git.fsfe.org/dxtr/bitwarderl%40cc55108da32
 
 
 github
@@ -241,9 +260,9 @@ hackage
 - The `name` is case sensitive and use kebab-case
 - Examples::
 
-        pkg:hackage/a50@0.5
-        pkg:hackage/AC-HalfInteger@1.2.1
-        pkg:hackage/3d-graphics-examples@0.0.0.2
+      pkg:hackage/a50@0.5
+      pkg:hackage/AC-HalfInteger@1.2.1
+      pkg:hackage/3d-graphics-examples@0.0.0.2
 
 hex
 ---
@@ -332,10 +351,10 @@ including container images built by Docker and others:
   - ``tag``: artifact tag that may have been associated with the digest at the time
 - Examples::
 
-      pkg:oci/debian@sha256:<digest>?repository_url=docker.io/library/debian&arch=amd64&tag=latest
-      pkg:oci/debian@sha256:<digest>?repository_url=ghcr.io/debian&tag=bullseye
-      pkg:oci/static@sha256:<digest>?repository_url=gcr.io/distroless/static&tag=latest
-      pkg:oci/hello-wasm@sha256:<digest>?tag=v1
+      pkg:oci/debian@sha256%3A244fd47e07d10?repository_url=docker.io/library/debian&arch=amd64&tag=latest
+      pkg:oci/debian@sha256%3A244fd47e07d10?repository_url=ghcr.io/debian&tag=bullseye
+      pkg:oci/static@sha256%3A244fd47e07d10?repository_url=gcr.io/distroless/static&tag=latest
+      pkg:oci/hello-wasm@sha256%3A244fd47e07d10?tag=v1
 
 pub
 ----
@@ -410,9 +429,9 @@ swift
 ``swift`` for Swift packages:
 
 - There is no default package repository: this should be implied from ``namespace``
-- The ``namespace`` is source host and user/organization.
+- The ``namespace`` is source host and user/organization and is required.
 - The ``name`` is the repository name.
-- The ``version`` is the package version.
+- The ``version`` is the package version and is required.
 - Examples::
 
       pkg:swift/github.com/Alamofire/Alamofire@5.4.3
@@ -424,7 +443,6 @@ Other candidate types to define:
 - ``alpine`` for Alpine Linux apk packages:
 - ``apache`` for Apache projects packages:
 - ``android`` for Android apk packages:
-- ``arch`` for Arch Linux packages:
 - ``atom`` for Atom packages:
 - ``bower`` for Bower JavaScript packages:
 - ``brew`` for Homebrew packages:
