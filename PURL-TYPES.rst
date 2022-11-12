@@ -41,6 +41,23 @@ alpm
       pkg:alpm/arch/python-pip@21.0-1?arch=any
       pkg:alpm/arch/containers-common@1:0.47.4-4?arch=x86_64
 
+apk
+---
+``apk`` for APK-based packages:
+
+- There is no default package repository: this should be implied either from
+  the ``distro`` qualifiers key  or using a repository base url as 
+  ``repository_url`` qualifiers key.
+- The ``namespace`` is the vendor such as ``alpine`` or ``openwrt``. It is not
+  case sensitive and must be lowercased.
+- The ``name`` is the package name. It is not case sensitive and must be
+  lowercased.
+- The ``version`` is a package version as expected by apk.
+- The ``arch`` is the qualifiers key for a package architecture.
+- Examples::
+
+      pkg:apk/alpine/curl@7.83.0-r0?arch=x86
+      pkg:apk/alpine/apk@2.12.9-r3?arch=x86
 
 bitbucket
 ---------
@@ -326,6 +343,20 @@ nuget
 
       pkg:nuget/EnterpriseLibrary.Common@6.0.1304
 
+qpkg
+----
+``qpkg`` for QNX packages:
+
+- There is no default package repository: this should be implied either from
+  the ``namespace`` or using a repository base URL as ``repository_url`` 
+  qualifiers key.
+- The ``namespace`` is the vendor of the package. It is not case sensitive and must be
+  lowercased.
+- Examples::
+
+      pkg:qpkg/blackberry/com.qnx.sdp@7.0.0.SGA201702151847
+      pkg:qpkg/blackberry/com.qnx.qnx710.foo.bar.qux@0.0.4.01449T202205040833L
+
 oci
 ------------
 ``oci`` for all artifacts stored in registries that conform to the
@@ -440,7 +471,6 @@ swift
 Other candidate types to define:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- ``alpine`` for Alpine Linux apk packages:
 - ``apache`` for Apache projects packages:
 - ``android`` for Android apk packages:
 - ``atom`` for Atom packages:
