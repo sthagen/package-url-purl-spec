@@ -1,5 +1,12 @@
+# Annex A (normative) PURL Type Definition
+This Annex provides a copy of the current Package-URL Type Definition Schema.
+The format is JSON Schema version draft-07.
+
+The schema shown below is available in electronic form at: https://github.com/package-url/purl-spec/blob/main/schemas/purl-type-definition.schema-1.1.json
+
+~~~
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://packageurl.org/schemas/purl-type-definition.schema-1.1.json",
   "title": "Package-URL Type Definition",
   "description": "Schema to specify a Package-URL (PURL) type as a structured definition.",
@@ -11,12 +18,6 @@
       "description": "States that this PURL component is optional for a PURL type.",
       "type": "string",
       "const": "optional"
-    },
-    "recommended_requirement": {
-      "title": "Component recommended requirement",
-      "description": "States that this PURL component is recommended for a PURL type.",
-      "type": "string",
-      "const": "recommended"
     },
     "required_requirement": {
       "title": "Component required requirement",
@@ -90,7 +91,7 @@
       "title": "PURL type definition id",
       "description": "The unique identifier URI for this PURL type definition.",
       "type": "string",
-      "pattern": "^https:\\/\\/packageurl\\.org/purl-types/[a-z0-9-]+-definition\\.json$"
+      "pattern": "^https:\\/\\/packageurl\\.org/types/[a-z0-9-]+-definition\\.json$"
     },
     "type": {
       "title": "PURL type",
@@ -168,40 +169,8 @@
               "$ref": "#/definitions/prohibited_requirement"
             }
           ]
-        },
-        "registered_values": {
-          "title": "Registered namespace values",
-          "description": "Optional set of registered namespace values for this PURL type. If the namespace value for a PURL of this type is not one of these registered values, a tool should report a warning. The registered namespace values should be sorted lexicographically.",
-          "type": "array",
-          "uniqueItems": true,
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "value",
-              "description"
-          ],
-          "properties": {
-            "value": {
-              "title": "Registered Namespace Value",
-              "description": "Registered namespace value for this PURL type.",
-              "type": "string"
-            },
-            "description": {
-              "title": "Registered Namespace Description",
-              "description": "Explanation of what this namespace value means for this PURL type.",
-              "type": "string"
-            },
-            "reference_url": {
-              "title": "Reference URL",
-              "description": "Optional Reference URL for where this namespace value is defined for this PURL type.",
-              "type":"string"
-            }
-          }
         }
-      }
-    },
+      },
       "allOf": [
         {
           "$ref": "#/definitions/purl_component_definition"
@@ -281,14 +250,11 @@
           },
           "requirement": {
             "title": "Qualifier key requirement",
-            "description": "States that a PURL qualifier key is optional, recommended or required for a PURL type.",
+            "description": "States that a PURL qualifier key is optional or required for a PURL type.",
             "type": "string",
             "oneOf": [
               {
                 "$ref": "#/definitions/optional_requirement"
-              },
-              {
-                "$ref": "#/definitions/recommended_requirement"
               },
               {
                 "$ref": "#/definitions/required_requirement"
@@ -297,7 +263,7 @@
           },
           "description": {
             "title": "Description",
-            "description": "The description of this qualifier key.",
+            "description": "The description of this qualifier.",
             "type": "string"
           },
           "default_value": {
@@ -340,7 +306,7 @@
     },
     "examples": {
       "title": "PURL examples",
-      "description": "Example of canonical PURLs for this package type.",
+      "description": "Example of valid, canonical PURLs for this package type.",
       "type": "array",
       "uniqueItems": true,
       "minItems": 1,
@@ -366,3 +332,4 @@
     }
   }
 }
+~~~
